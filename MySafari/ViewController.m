@@ -45,25 +45,53 @@
 }
 
 
+- (IBAction)onFeatureButtonPressed:(id)sender {
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Coming Soon!" message: nil delegate: nil cancelButtonTitle: @"Dismiss" otherButtonTitles: nil];
+    
+    [alert show];
+}
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    myWebView.scrollView.delegate = self;
 	// Do any additional setup after loading the view, typically from a nib.
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    NSString *myText;
+    NSString *prefix = @"http://";
     
-    NSURL *url = [NSURL URLWithString:textField.text];
+    if ([textField.text hasPrefix:@"http://"]) {
+        myText = textField.text;
+    }
+    else {
+        myText = [prefix stringByAppendingString:textField.text];
+    }
+    
+    NSURL *url = [NSURL URLWithString:myText];
+    
     
     NSURLRequest *request = [NSURLRequest requestWithURL: url];
     [myWebView loadRequest: request];
     
+    [textField resignFirstResponder];
     return YES;
+    
     
 }
 
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    
+    if (scrollView.dragging == YES ){
+        myURLTextField.hidden = YES;
+    }
+    else {
+        myURLTextField.hidden = NO;
+    }
+}
 
 - (void)didReceiveMemoryWarning
 {
